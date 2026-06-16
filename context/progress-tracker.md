@@ -6,9 +6,9 @@ Update this file after every completed feature. Any AI agent reading this should
 
 ## Current Status
 
-**Phase:**
-**Last completed:**
-**Next:**
+**Phase:** Phase 1 — Foundation
+**Last completed:** 01 Homepage
+**Next:** 02 Auth
 
 ---
 
@@ -16,10 +16,10 @@ Update this file after every completed feature. Any AI agent reading this should
 
 ### Phase 1 — Foundation
 
-- [ ] 01 Homepage
-- [ ] 02 Auth
-- [ ] 03 PostHog Initialization
-- [ ] 04 Database Schema
+- [x] 01 Homepage
+- [x] 02 Auth
+- [x] 03 PostHog Initialization
+- [x] 04 Database Schema
 
 ### Phase 2 — Profile Page
 
@@ -56,4 +56,5 @@ _Add decisions here as they are made during implementation._
 
 ## Notes
 
-_Add notes here as the build progresses — workarounds, patterns, anything that differs from the context files._
+_Phase 1-02 Auth uses reusable OAuthButton component from components/auth/_
+_Google/GitHub logos use CSS variables in globals.css for brand colors_.

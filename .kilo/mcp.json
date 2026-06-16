@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "insforge": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "D:\\javascript\\npx.cmd",
+        "-y",
+        "@insforge/mcp@latest"
+      ],
+      "env": {
+        "API_KEY": "ik_f56013096a330fd9c21090230ef17df1",
+        "API_BASE_URL": "https://jf3qvyvk.ap-southeast.insforge.app",
+        "APPDATA": "C:\\Users\\Death\\AppData\\Roaming",
+        "LOCALAPPDATA": "C:\\Users\\Death\\AppData\\Local",
+        "PATH": "D:\\javascript;C:\\Windows\\system32;C:\\Windows"
+      }
+    }
+  }
+}
