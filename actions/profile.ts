@@ -101,7 +101,7 @@ export async function saveProfile(
         : data.experienceLevel || null;
 
     const remotePreferenceMap: Record<string, string> = {
-      "Any": "any",
+      Any: "any",
       "Remote Only": "remote",
       Hybrid: "hybrid",
       "On-site": "onsite",
@@ -136,7 +136,7 @@ export async function saveProfile(
       education,
     });
 
-    console.log("PAYLOAD", data)
+    console.log("PAYLOAD", data);
     const { data: updated, error } = await insforge.database
       .from("profiles")
       .upsert(
@@ -169,7 +169,7 @@ export async function saveProfile(
       .select("id")
       .single<{ id: string }>();
 
-      console.log("RETURN action", updated, error)
+    console.log("RETURN action", updated, error);
 
     if (error) {
       console.error("[actions/profile] saveProfile", error);
@@ -225,7 +225,7 @@ export async function uploadResume(
 
     const path = `${user.id}/resume.pdf`;
 
-    console.log(path)
+    console.log(path);
 
     // SDK has no upsert option — remove existing file first, then upload fresh
     await insforge.storage.from("resumes").remove(path);
@@ -350,14 +350,14 @@ export async function extractProfile(): Promise<{
     // const raw = response.choices[0].message.content;
 
     // First API call with reasoning
-const response = await fetch(
-       "https://openrouter.ai/api/v1/chat/completions",
-       {
-         method: "POST",
-         headers: {
-           Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-           "Content-Type": "application/json",
-         },
+    const response = await fetch(
+      "https://openrouter.ai/api/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           model: "poolside/laguna-xs.2:free",
           messages: [
@@ -395,7 +395,7 @@ const response = await fetch(
 
     // Extract the assistant message with reasoning_details and save it to the response variable
     const result = await response.json();
-  
+
     const raw = result.choices[0].message.content;
 
     if (!raw) {

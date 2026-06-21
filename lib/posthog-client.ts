@@ -1,19 +1,42 @@
-import posthog from 'posthog-js'
+"use client";
 
-export const trackEvent = (event: string, properties?: Record<string, unknown>) => {
-  if (typeof window !== 'undefined' && posthog.__loaded) {
-    posthog.capture(event, properties)
-  }
+import posthog from "posthog-js";
+
+function getPostHogKey(): string | undefined {
+  return (
+    process.env.NEXT_PUBLIC_POSTHOG_KEY ??
+    process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN
+  );
 }
 
-export const identifyUser = (userId: string, email?: string) => {
-  if (typeof window !== 'undefined' && posthog.__loaded) {
-    posthog.identify(userId, { email })
+export function initPostHog(): void {
+  const key = getPostHogKey();
+  const host = process.env.NEXT_PUBLIC_POSTHOG_HOST ?? "https://us.i.posthog.com";
+
+  if (!key || typeof window === "undefined") {
+    return;
   }
+
+  posthog.init(key, {
+    api_host: host,
+    capture_pageview: true,
+    capture_exceptions: true,
+    debug: process.env.NODE_ENV === "development",
+  });
 }
 
-export const resetUser = () => {
-  if (typeof window !== 'undefined' && posthog.__loaded) {
-    posthog.reset()
+export function identifyPostHogUser(userId: string): void {
+  if (!getPostHogKey()) {
+    return;
   }
+
+  posthog.identify(userId, { userId });
+}
+
+export function resetPostHogUser(): void {
+  if (!getPostHogKey()) {
+    return;
+  }
+
+  posthog.reset();
 }

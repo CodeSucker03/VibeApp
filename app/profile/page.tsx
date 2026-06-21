@@ -1,27 +1,47 @@
-"use client";
+export const dynamic = "force-dynamic";
 
-import { useEffect } from "react";
+import { PostHogIdentify } from "@/components/analytics/PostHogIdentify";
 import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
-import { trackEvent } from "@/lib/posthog-client";
+import { ProfileAttentionBanner } from "@/components/profile/ProfileAttentionBanner";
+import { ProfilePageClient } from "@/components/profile/ProfilePageClient";
+import { requireUser } from "@/lib/auth";
+import { createInsforgeServer } from "@/lib/insforge-server";
+import { calculateCompletion } from "@/lib/profile-utils";
+import type { Profile } from "@/types";
 
-export default function ProfilePage() {
-  useEffect(() => {
-    trackEvent('profile_viewed');
-  }, []);
+export default async function ProfilePage() {
+  const user = await requireUser();
+  const insforge = await createInsforgeServer();
+
+  const { data: profile } = await insforge.database
+    .from("profiles")
+    .select("*")
+    .eq("id", user.id)
+    .maybeSingle<Profile>();
+
+  const { completionPercent, missingFields } = calculateCompletion({
+    full_name: profile?.full_name ?? null,
+    phone: profile?.phone ?? null,
+    location: profile?.location ?? null,
+    current_title: profile?.current_title ?? null,
+    experience_level: profile?.experience_level ?? null,
+    years_experience: profile?.years_experience ?? null,
+    skills: profile?.skills ?? [],
+    work_experience: profile?.work_experience ?? null,
+    education: profile?.education ?? null,
+  });
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
-      <Navbar />
-      <main className="flex-1">
-        <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-8">
-          <div className="text-center">
-            <h1 className="text-3xl font-semibold text-text-darkest">Profile</h1>
-            <p className="mt-2 text-text-secondary">Manage your profile and preferences</p>
-          </div>
-        </div>
+    <>
+      <PostHogIdentify userId={user.id} />
+      <Navbar isAuthenticated />
+      <main className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-[1440px] flex-col gap-6 px-4 py-8 sm:px-6 lg:px-8">
+        <ProfileAttentionBanner
+          completionPercent={completionPercent}
+          missingFields={missingFields}
+        />
+        <ProfilePageClient profile={profile ?? null} />
       </main>
-      <Footer />
-    </div>
+    </>
   );
 }

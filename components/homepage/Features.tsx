@@ -1,57 +1,67 @@
 import Image from "next/image";
-import { LandingImage } from "./ui";
 
-const features = [
+const featureItems = [
   {
     title: "Understand your match score",
     description:
       "See how your profile lines up with each role before you apply. Get a clear breakdown of what fits and what's missing.",
-    icon: "🎯",
   },
   {
-    title: "AI-Powered Job Matching",
+    title: "Generate cover letters quickly",
     description:
-      "Stop guessing which jobs are worth applying to. JobPilot scores every role against your actual skills so you focus on the ones that matter.",
-    icon: "🤖",
+      "Write letters that feel natural and specific to each role, you can edit or regenerate anytime.",
   },
   {
     title: "Focus on the right roles",
     description:
-      "Filter out low-fit jobs and stay on the ones that actually matter. Spend less time sorting and more time applying.",
-    icon: "✅",
+      "Filter out low fit jobs and stay on the ones that actually matter. Spend less time sorting and more time applying.",
   },
 ];
 
 export function Features() {
   return (
-    <section className="mx-auto max-w-[1440px] px-8 py-20">
-      <div className="grid items-center gap-6 lg:grid-cols-2">
-        <div className="order-2 lg:order-1 w-full overflow-hidden rounded-2xl border border-border bg-surface shadow-[0px_1px_3px_rgba(0,0,0,0.1),0px_1px_2px_-1px_rgba(0,0,0,0.1)]">
-          <LandingImage src="/images/agent-log.png" alt="Agent log preview" />
+    <section className="px-4 sm:px-6 lg:px-8">
+      <div className="landing-panel landing-grid mx-auto grid max-w-[1440px] overflow-hidden lg:grid-cols-[1.02fr_1fr]">
+        <div className="bg-surface-tertiary px-6 py-10 sm:px-10 sm:py-12 lg:px-12 lg:py-16">
+          <div className="mx-auto max-w-[590px] overflow-hidden rounded-[28px] border border-border bg-surface">
+            <Image
+              src="/images/agnet-log.png"
+              alt="JobPilot agent log output"
+              width={2144}
+              height={1656}
+              className="h-auto w-full"
+            />
+          </div>
         </div>
 
-        <div className="order-1 lg:order-2 grid gap-4">
-          <h2 className="text-3xl font-semibold leading-snug text-text-darkest">
-            Apply With More
-            <br />
-            Confidence, Every Time
-          </h2>
+        <div className="bg-surface">
+          <div className="border-b border-border px-9 py-9 sm:px-12 sm:py-12 lg:px-14 lg:py-16">
+            <h2 className="max-w-lg text-[clamp(2.2rem,5vw,3.5rem)] font-semibold leading-[0.96] tracking-[-0.045em] text-text-slate">
+              Apply With More Confidence, Every Time
+            </h2>
+          </div>
 
-          {features.map((feature) => (
-            <div key={feature.title} className="flex gap-4">
-              <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-accent-muted text-lg">
-                {feature.icon}
+          <div>
+            {featureItems.map((item, index) => (
+              <div
+                key={item.title}
+                className="border-b border-border px-9 py-7 sm:px-12 lg:px-14"
+              >
+                <div
+                  className={`max-w-xl ${
+                    index === 1 ? "border-l-2 border-success pl-5" : "pl-6"
+                  }`}
+                >
+                  <h3 className="text-lg font-semibold leading-7 text-text-primary">
+                    {item.title}
+                  </h3>
+                  <p className="mt-2 text-base leading-7 text-text-secondary">
+                    {item.description}
+                  </p>
+                </div>
               </div>
-              <div>
-                <h3 className="text-base font-semibold text-text-darkest">
-                  {feature.title}
-                </h3>
-                <p className="mt-1 text-sm leading-relaxed text-text-secondary">
-                  {feature.description}
-                </p>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>

@@ -1,72 +1,67 @@
 "use client";
 
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { useState, useEffect } from "react";
-import { insforge } from "@/lib/insforge-client";
-import { trackEvent, resetUser } from "@/lib/posthog-client";
+import { usePathname } from "next/navigation";
+import { LogOut, UserCircle } from "lucide-react";
 
-const links = [
+import { Logo } from "@/components/layout/Logo";
+import { PostHogLogoutLink } from "@/components/analytics/PostHogLogoutLink";
+
+const navigationItems = [
   { href: "/dashboard", label: "Dashboard" },
   { href: "/find-jobs", label: "Find Jobs" },
   { href: "/profile", label: "Profile" },
 ];
 
-export function Navbar() {
-  const [user, setUser] = useState<{ email: string } | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+type Props = {
+  isAuthenticated?: boolean;
+};
 
-  useEffect(() => {
-    insforge.auth.getCurrentUser().then(({ data, error }) => {
-      if (error) {
-        console.error("[navbar] auth error:", error);
-      }
-      setUser(data?.user || null);
-      setIsLoading(false);
-    });
-  }, []);
-
-  const handleSignOut = async () => {
-    await insforge.auth.signOut();
-    resetUser();
-    trackEvent('sign_out_clicked');
-    setUser(null);
-    window.location.href = '/login';
-  };
+export function Navbar({ isAuthenticated = false }: Props) {
+  const pathname = usePathname();
 
   return (
-    <header className="h-16 w-full border-b border-border bg-surface">
-      <div className="mx-auto flex h-full max-w-[1440px] items-center px-8">
-        <Link href="/" className="flex items-center gap-2">
-          <span className="text-lg font-bold text-text-darkest">JobPilot</span>
-        </Link>
+    <header className="border-b border-border bg-surface">
+      <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+        <Logo priority />
 
-        <nav className="ml-12 flex items-center gap-6">
-          {links.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="text-sm font-medium text-text-dark hover:text-accent"
-            >
-              {item.label}
-            </Link>
-          ))}
+        <nav className="hidden items-center gap-8 md:flex">
+          {navigationItems.map((item) => {
+            const isActive =
+              item.href === "/find-jobs"
+                ? pathname.startsWith("/find-jobs")
+                : pathname === item.href;
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={[
+                  "text-sm font-medium transition-colors",
+                  isActive
+                    ? "text-accent"
+                    : "text-text-dark hover:text-text-primary",
+                ].join(" ")}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
         </nav>
 
-        <div className="ml-auto">
-          {isLoading ? null : user ? (
-            <div className="flex items-center gap-3">
-              <span className="text-sm text-text-secondary">{user.email}</span>
-              <Button variant="outline" size="sm" onClick={handleSignOut}>
-                Sign Out
-              </Button>
-            </div>
-          ) : (
-            <Link href="/login">
-              <Button>Get Started</Button>
-            </Link>
-          )}
-        </div>
+        {isAuthenticated ? (
+          <div className="flex items-center gap-6">
+            <UserCircle className="hidden h-6 w-6 text-info-muted sm:block" />
+            <PostHogLogoutLink className="inline-flex items-center gap-2 text-sm font-medium text-text-secondary transition-colors hover:text-text-primary">
+              <LogOut className="h-4 w-4" />
+              <span>Sign out</span>
+            </PostHogLogoutLink>
+          </div>
+        ) : (
+          <Link href="/login" className="landing-button-primary min-h-10 px-4">
+            Start for free
+          </Link>
+        )}
       </div>
     </header>
   );

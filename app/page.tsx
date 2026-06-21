@@ -1,25 +1,37 @@
-import Link from "next/link";
-import Image from "next/image";
-import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
+import { CTASection } from "@/components/homepage/CTASection";
+import { Features } from "@/components/homepage/Features";
 import { Hero } from "@/components/homepage/Hero";
 import { HowItWorks } from "@/components/homepage/HowItWorks";
-import { Features } from "@/components/homepage/Features";
-import { Testimonials } from "@/components/homepage/Testimonials";
-import { CTASection } from "@/components/homepage/CTASection";
+import { SuccessStory } from "@/components/homepage/SuccessStory";
+import { Footer } from "@/components/layout/Footer";
+import { Navbar } from "@/components/layout/Navbar";
 
-export default function Home() {
+const dividerClassName =
+  "landing-divider mx-auto h-10 max-w-[1440px] border-x border-border bg-surface";
+
+export default function HomePage() {
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <>
       <Navbar />
-      <main className="flex-1">
+      <main className="pb-0">
         <Hero />
         <HowItWorks />
+        <div className="px-4 sm:px-6 lg:px-8">
+          <div className={dividerClassName} />
+        </div>
         <Features />
-        <Testimonials />
+        <div className="px-4 sm:px-6 lg:px-8">
+          <div className={dividerClassName} />
+        </div>
+        <SuccessStory />
+        <div className="px-4 sm:px-6 lg:px-8">
+          <div className={dividerClassName} />
+        </div>
         <CTASection />
       </main>
-      <Footer />
-    </div>
+      <div className="px-4 sm:px-6 lg:px-8">
+        <Footer />
+      </div>
+    </>
   );
 }

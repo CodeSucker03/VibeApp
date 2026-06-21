@@ -1,8 +1,7 @@
-import { createClient } from "@insforge/sdk";
+"use client";
 
-export const insforge = createClient({
-  baseUrl: process.env.NEXT_PUBLIC_INSFORGE_URL!,
-  anonKey: process.env.NEXT_PUBLIC_INSFORGE_ANON_KEY!,
+import { createBrowserClient } from "@insforge/sdk/ssr";
+
+export const insforge = createBrowserClient({
+  refreshUrl: "/api/auth/refresh",
 });
-
-export const MATCH_THRESHOLD = 70;

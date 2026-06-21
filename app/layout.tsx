@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { PostHogProvider } from "@/components/providers/PostHogProvider";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
+const inter = Inter({
+  variable: "--font-sans",
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   title: "JobPilot",
-  description: "AI-powered job hunting assistant",
+  description:
+    "AI-powered job search assistance for matching roles, tailored resumes, and faster applications.",
 };
 
 export default function RootLayout({
@@ -17,10 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col">
-        <PostHogProvider>{children}</PostHogProvider>
-      </body>
+      <body className="flex min-h-full flex-col bg-background">{children}</body>
     </html>
   );
 }
-

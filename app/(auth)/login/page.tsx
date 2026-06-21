@@ -1,59 +1,35 @@
-"use client";
+import { redirect } from "next/navigation";
 
-import { useState } from "react";
-import { insforge } from "@/lib/insforge-client";
-import { OAuthButton } from "@/components/auth/OAuthButton";
-import { trackEvent } from "@/lib/posthog-client";
+import { LoginCard } from "@/components/auth/LoginCard";
+import { Footer } from "@/components/layout/Footer";
+import { Navbar } from "@/components/layout/Navbar";
+import { getCurrentUser, getPostLoginRedirectPath } from "@/lib/auth";
 
-export default function LoginPage() {
-  const [isLoading, setIsLoading] = useState<"google" | "github" | null>(null);
-  const [error, setError] = useState<string | null>(null);
+type LoginPageProps = {
+  searchParams: Promise<{
+    error?: string | string[];
+  }>;
+};
 
-  const handleOAuthSignIn = async (provider: "google" | "github") => {
-    trackEvent('oauth_sign_in_clicked', { provider })
-    setIsLoading(provider);
-    setError(null);
-    try {
-      await insforge.auth.signInWithOAuth(provider, {
-        redirectTo: `${window.location.origin}/callback`,
-      });
-    } catch (err) {
-      trackEvent('oauth_sign_in_failed', { provider, error: err })
-      console.error("[login]", err);
-      setError("Something went wrong. Please try again.");
-      setIsLoading(null);
-    }
-  };
+export default async function LoginPage({ searchParams }: LoginPageProps) {
+  const user = await getCurrentUser();
+
+  if (user) {
+    redirect(await getPostLoginRedirectPath(user.id));
+  }
+
+  const params = await searchParams;
+  const error = Array.isArray(params.error) ? params.error[0] : params.error;
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-8">
-      <div className="w-full max-w-sm rounded-2xl border border-border bg-surface p-8 shadow-[0px_1px_3px_rgba(0,0,0,0.1),0px_1px_2px_-1px_rgba(0,0,0,0.1)]">
-        <div className="mb-6 text-center">
-          <h1 className="text-2xl font-semibold text-text-darkest">Welcome to JobPilot</h1>
-          <p className="mt-2 text-sm text-text-secondary">
-            Sign in to start finding your perfect job match
-          </p>
-        </div>
-
-        {error && (
-          <div className="mb-4 rounded-md bg-error-lightest p-3 text-sm text-error">
-            {error}
-          </div>
-        )}
-
-        <div className="space-y-3">
-          <OAuthButton
-            provider="google"
-            isLoading={isLoading === "google"}
-            onClick={() => handleOAuthSignIn("google")}
-          />
-          <OAuthButton
-            provider="github"
-            isLoading={isLoading === "github"}
-            onClick={() => handleOAuthSignIn("github")}
-          />
-        </div>
+    <>
+      <Navbar />
+      <main>
+        <LoginCard error={error} />
+      </main>
+      <div className="px-4 sm:px-6 lg:px-8">
+        <Footer />
       </div>
-    </div>
+    </>
   );
 }

@@ -1,33 +1,32 @@
-"use client";
-
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { trackEvent } from "@/lib/posthog-client";
 
 export function CTASection() {
   return (
-    <section className="mx-auto max-w-[1440px] px-8 py-20">
-      <div className="rounded-2xl border border-border bg-white px-6 py-20 text-center shadow-[0px_1px_3px_rgba(0,0,0,0.1),0px_1px_2px_-1px_rgba(0,0,0,0.1)]">
-        <h2 className="text-3xl font-semibold leading-snug text-text-darkest">
-          Your next job search can feel a
-          <br />
-          lot less overwhelming
-        </h2>
-        <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-text-secondary">
-          Set up your profile, upload your resume, and start finding matches in minutes.
-        </p>
-
-        <div className="mt-7 inline-flex gap-3">
-          <Link href="/login">
-            <Button onClick={() => trackEvent('cta_clicked', { section: 'hero', cta: 'get_started' })}>
+    <section className="px-4 pb-8 sm:px-6 sm:pb-10 lg:px-8">
+      <div className="landing-panel landing-hero-glow mx-auto max-w-[1440px] px-6 py-16 text-center sm:px-10 sm:py-20 lg:px-16 lg:py-24">
+        <div className="mx-auto max-w-4xl">
+          <h2 className="text-[clamp(2.5rem,6vw,4.5rem)] font-semibold leading-[0.96] tracking-[-0.045em] text-text-slate">
+            Your next job search can feel a lot less overwhelming
+          </h2>
+          <p className="mx-auto mt-6 max-w-2xl text-base leading-7 text-text-secondary sm:text-lg">
+            Set up your profile, upload your resume, and start finding matches
+            in minutes.
+          </p>
+          <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <Link
+              href="/login"
+              className="landing-button-primary"
+            >
               Get Started
-            </Button>
-          </Link>
-          <Link href="/find-jobs">
-            <Button variant="secondary" onClick={() => trackEvent('cta_clicked', { section: 'hero', cta: 'find_jobs' })}>
+              <span className="ml-2 text-xs">{">"}</span>
+            </Link>
+            <Link
+              href="/login"
+              className="landing-button-secondary"
+            >
               Find Your First Match
-            </Button>
-          </Link>
+            </Link>
+          </div>
         </div>
       </div>
     </section>

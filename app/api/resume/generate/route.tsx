@@ -13,7 +13,11 @@ function createResumeDocument(
   profile: Profile,
   generated: GeneratedContent,
 ): React.ReactElement<DocumentProps> {
-  return <ResumePDF profile={profile} generated={generated} />;
+  // ResumePDF renders a @react-pdf <Document>; the cast bridges React's component
+  // prop inference to the renderer's document element type.
+  return (
+    <ResumePDF profile={profile} generated={generated} />
+  ) as unknown as React.ReactElement<DocumentProps>;
 }
 
 export async function POST(_req: NextRequest): Promise<NextResponse> {
@@ -41,9 +45,6 @@ export async function POST(_req: NextRequest): Promise<NextResponse> {
       );
     }
 
-    // Generate polished resume content with GPT-4o
-    // const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
-
     const profileContext = JSON.stringify({
       full_name: profile.full_name,
       current_title: profile.current_title,
@@ -55,6 +56,43 @@ export async function POST(_req: NextRequest): Promise<NextResponse> {
       education: profile.education,
       job_titles_seeking: profile.job_titles_seeking,
     });
+
+    // Generate polished resume content with GPT-4o
+    // const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
+
+    // const response = await openai.chat.completions.create({
+    //   model: "gpt-4o",
+    //   response_format: { type: "json_object" },
+    //   temperature: 0.7,
+    //   max_tokens: 1000,
+    //   messages: [
+    //     {
+    //       role: "system",
+    //       content:
+    //         "You are a professional resume writer. Given a candidate's profile data, produce a 2-3 sentence professional summary paragraph and rewrite each work experience entry's responsibilities as 3-5 concise, achievement-focused bullet points starting with strong action verbs. Return only valid JSON.",
+    //     },
+    //     {
+    //       role: "user",
+    //       content: `Generate polished resume content for this candidate and return JSON matching this exact shape:
+    //       {
+    //         "summary": "string — 2-3 sentence professional summary",
+    //         "work_experience": [
+    //           {
+    //             "company": "string",
+    //             "title": "string",
+    //             "start_date": "string",
+    //             "end_date": "string | null",
+    //             "is_current": false,
+    //             "bullets": ["string", "string", "string"]
+    //           }
+    //         ]
+    //       }
+
+    //       Candidate profile:
+    //       ${profileContext}`,
+    //     },
+    //   ],
+    // });
 
     const response = await fetch(
       "https://openrouter.ai/api/v1/chat/completions",
@@ -75,22 +113,22 @@ export async function POST(_req: NextRequest): Promise<NextResponse> {
             {
               role: "user",
               content: `Generate polished resume content for this candidate and return JSON matching this exact shape:
-            {
-              "summary": "string — 2-3 sentence professional summary",
-              "work_experience": [
-                {
-                  "company": "string",
-                  "title": "string",
-                  "start_date": "string",
-                  "end_date": "string | null",
-                  "is_current": false,
-                  "bullets": ["string", "string", "string"]
-                }
-              ]
-            }
+          {
+            "summary": "string — 2-3 sentence professional summary",
+            "work_experience": [
+              {
+                "company": "string",
+                "title": "string",
+                "start_date": "string",
+                "end_date": "string | null",
+                "is_current": false,
+                "bullets": ["string", "string", "string"]
+              }
+            ]
+          }
 
-            Candidate profile:
-            ${profileContext}`,
+          Candidate profile:
+          ${profileContext}`,
             },
           ],
         }),
@@ -99,8 +137,8 @@ export async function POST(_req: NextRequest): Promise<NextResponse> {
 
     // Extract the assistant message with reasoning_details and save it to the response variable
     const result = await response.json();
+
     const raw = result.choices[0].message.content;
-    
     if (!raw) {
       return NextResponse.json(
         { success: false, error: "AI returned an empty response" },

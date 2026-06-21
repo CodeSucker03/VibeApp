@@ -1,48 +1,48 @@
-"use client";
-
-import Link from "next/link";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { trackEvent } from "@/lib/posthog-client";
+import Link from "next/link";
 
 export function Hero() {
   return (
-    <section className="bg-gradient-to-b from-accent-light via-accent-muted to-background">
-      <div className="mx-auto max-w-[1440px] px-8 py-24">
-        <div className="mx-auto max-w-3xl text-center">
-          <h1 className="text-5xl font-semibold leading-tight tracking-tight text-text-darkest">
-            Job hunting is hard.
-            <br />
-            Your tools shouldn&apos;t be.
-          </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-text-secondary">
-            Stop applying blind. JobPilot finds the jobs, researches the companies,
-            and gives you everything you need to stand out.
-          </p>
-
-          <div className="mt-7 inline-flex gap-3">
-            <Link href="/login">
-              <Button onClick={() => trackEvent('hero_cta_clicked', { cta: 'get_started' })}>
+    <section className="px-4 pt-8 sm:px-6 sm:pt-10 lg:px-8">
+      <div className="mx-auto max-w-[1440px] border border-border bg-surface">
+        <div className="landing-hero-glow border-b border-border px-6 py-16 text-center sm:px-10 sm:py-20 lg:px-16 lg:py-24">
+          <div className="mx-auto max-w-4xl">
+            <h1 className="text-[clamp(2.75rem,7vw,4.625rem)] font-semibold leading-[0.94] tracking-[-0.045em] text-text-slate">
+              Job hunting is hard.
+              <br />
+              Your tools shouldn&apos;t be.
+            </h1>
+            <p className="mx-auto mt-6 max-w-2xl text-base leading-7 text-text-secondary sm:text-lg">
+              Find better job matches, tailor your resume for every role, and
+              keep everything organized in one place.
+            </p>
+            <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <Link
+                href="/login"
+                className="landing-button-primary"
+              >
                 Get Started
-              </Button>
-            </Link>
-            <Link href="/find-jobs">
-              <Button variant="secondary" onClick={() => trackEvent('hero_cta_clicked', { cta: 'find_jobs' })}>
+                <span className="ml-2 text-xs">{">"}</span>
+              </Link>
+              <Link
+                href="/login"
+                className="landing-button-secondary"
+              >
                 Find Your First Match
-              </Button>
-            </Link>
+              </Link>
+            </div>
           </div>
         </div>
 
-        <div className="mx-auto mt-14 w-full max-w-4xl">
-          <div className="rounded-2xl border border-border bg-white p-2 shadow-[0px_1px_3px_rgba(0,0,0,0.1),0px_1px_2px_-1px_rgba(0,0,0,0.1)]">
+        <div className="bg-surface-tertiary px-4 pt-7 sm:px-8 lg:px-10">
+          <div className="landing-browser-frame landing-browser-shadow mx-auto max-w-[1114px] overflow-hidden rounded-[26px] bg-surface">
             <Image
               src="/images/dashboard-demo.png"
-              alt="Dashboard preview"
-              width={1124}
-              height={640}
-              className="w-full rounded-xl object-cover"
+              alt="JobPilot dashboard preview"
+              width={4788}
+              height={2416}
               priority
+              className="h-auto w-full"
             />
           </div>
         </div>
